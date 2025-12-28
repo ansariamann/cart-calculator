@@ -171,7 +171,7 @@ const Index = () => {
               </div>
               <p className="text-foreground font-medium">No items yet</p>
               <p className="text-sm text-muted-foreground mt-1">
-                Tap "Add Item" to get started
+                Tap &quot;Add Item&quot; to get started
               </p>
             </div>
           ) : (
