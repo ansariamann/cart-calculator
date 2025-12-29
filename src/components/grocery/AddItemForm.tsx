@@ -22,7 +22,7 @@ export const AddItemForm = ({ onAdd }: AddItemFormProps) => {
   const [quantity, setQuantity] = useState("1");
   const [price, setPrice] = useState("");
   const [category, setCategory] = useState("");
-  const { click, success } = useSoundEffects();
+  const { click, success, typing } = useSoundEffects();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,6 +48,18 @@ export const AddItemForm = ({ onAdd }: AddItemFormProps) => {
     setIsOpen(false);
 
     toast.success("Item added");
+  };
+
+  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    const lastChar = newValue.slice(-1);
+
+    // Play typing sound only for actual character input (not backspace/delete)
+    if (newValue.length > price.length && /[0-9.]/.test(lastChar)) {
+      typing();
+    }
+
+    setPrice(newValue);
   };
   const handleOpenForm = () => {
     click();
@@ -142,7 +154,7 @@ export const AddItemForm = ({ onAdd }: AddItemFormProps) => {
           type="number"
           placeholder="Price"
           value={price}
-          onChange={(e) => setPrice(e.target.value)}
+          onChange={handlePriceChange}
           step="0.01"
           min="0"
           className="h-12 rounded-xl bg-secondary border-0 text-base"
