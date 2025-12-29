@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { X, Loader2 } from "lucide-react";
 import { toast } from "sonner";
@@ -26,7 +26,7 @@ export const CameraScanner = ({
   const [isScanning, setIsScanning] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const stopScanner = async () => {
+  const stopScanner = useCallback(async () => {
     if (scannerRef.current && (scannerRef.current.isScanning || isScanning)) {
       try {
         await scannerRef.current.stop();
@@ -36,12 +36,12 @@ export const CameraScanner = ({
     }
     scannerRef.current = null;
     setIsScanning(false);
-  };
+  }, [isScanning]);
 
-  const handleClose = async () => {
+  const handleClose = useCallback(async () => {
     await stopScanner();
     onClose();
-  };
+  }, [onClose, stopScanner]);
 
   useEffect(() => {
     let mounted = true;

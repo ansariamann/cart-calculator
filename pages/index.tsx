@@ -6,7 +6,6 @@ import { AddItemForm } from "../src/components/grocery/AddItemForm";
 import { BillSummary } from "../src/components/grocery/BillSummary";
 import { ActionBar } from "../src/components/grocery/ActionBar";
 import { HistoryModal } from "../src/components/grocery/HistoryModal";
-import { CameraScanner } from "../src/components/grocery/CameraScanner";
 import { useGroceryList } from "../src/hooks/useGroceryList";
 import { useTransactionHistory } from "../src/hooks/useTransactionHistory";
 import { useFavorites, FavoriteItem } from "../src/hooks/useFavorites";
@@ -43,7 +42,6 @@ const Index = () => {
   const { favorites, addFavorite, removeFavorite } = useFavorites();
 
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
-  const [isScannerOpen, setIsScannerOpen] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
 
   // Show scroll-to-top button only when scrolled down AND list is long
@@ -65,20 +63,6 @@ const Index = () => {
   const handleAddFavoriteToList = (item: FavoriteItem) => {
     addItem(item.name, 1, item.price, item.category);
     toast.success(`Added ${item.name} to list`);
-  };
-
-  const handleItemScanned = (scannedItem: {
-    name: string;
-    price: number;
-    quantity: number;
-    category?: string;
-  }) => {
-    addItem(
-      scannedItem.name,
-      scannedItem.quantity,
-      scannedItem.price,
-      scannedItem.category
-    );
   };
 
   const checkedCount = items.filter((item) => item.checked).length;
@@ -130,10 +114,10 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background pb-8">
+    <div className="min-h-screen bg-background flex flex-col">
       <Header onOpenHistory={() => setIsHistoryOpen(true)} />
 
-      <main className="max-w-md mx-auto px-4 py-4 space-y-4">
+      <main className="max-w-md mx-auto px-4 py-4 space-y-4 flex-grow w-full">
         {/* Budget Tracker */}
         <BudgetTracker
           budget={budget}
@@ -245,13 +229,6 @@ const Index = () => {
         onRemoveTransaction={removeTransaction}
         onToggleBookmark={toggleBookmark}
         onClearHistory={clearHistory}
-      />
-
-      {/* Camera Scanner Modal */}
-      <CameraScanner
-        isOpen={isScannerOpen}
-        onClose={() => setIsScannerOpen(false)}
-        onItemScanned={handleItemScanned}
       />
     </div>
   );

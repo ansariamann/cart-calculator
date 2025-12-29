@@ -50,8 +50,7 @@ export const useTransactionHistory = () => {
   }, []);
 
   const clearHistory = useCallback(() => {
-    // Keep bookmarked transactions, only clear non-bookmarked ones
-    setTransactions(prev => prev.filter(t => t.bookmarked));
+    setTransactions([]);
   }, []);
 
   return {

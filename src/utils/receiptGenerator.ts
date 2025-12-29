@@ -4,7 +4,7 @@ import { GroceryItem, BillCalculation } from '@/types/grocery';
 export const generateReceiptPDF = (
   items: GroceryItem[],
   calculation: BillCalculation,
-  storeName: string = 'QuickMart'
+  storeName: string = 'DAILY'
 ) => {
   const doc = new jsPDF({
     orientation: 'portrait',
@@ -23,6 +23,9 @@ export const generateReceiptPDF = (
 
   doc.setFontSize(8);
   doc.setFont('helvetica', 'normal');
+  doc.text('Simple. Easy. Yours.', pageWidth / 2, y, { align: 'center' });
+  y += 6;
+
   doc.text('RECEIPT', pageWidth / 2, y, { align: 'center' });
   y += 4;
 
