@@ -23,11 +23,11 @@ export const CameraScanner = ({
   onItemScanned,
 }: CameraScannerProps) => {
   const scannerRef = useRef<Html5Qrcode | null>(null);
-  const [isScanning, setIsScanning] = useState(false);
+  const initializingRef = useRef(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const stopScanner = useCallback(async () => {
-    if (scannerRef.current && (scannerRef.current.isScanning || isScanning)) {
+    if (scannerRef.current && scannerRef.current.isScanning) {
       try {
         await scannerRef.current.stop();
       } catch (e) {
@@ -35,23 +35,26 @@ export const CameraScanner = ({
       }
     }
     scannerRef.current = null;
-    setIsScanning(false);
-  }, [isScanning]);
+    initializingRef.current = false;
+  }, []);
 
   const handleClose = useCallback(async () => {
     await stopScanner();
     onClose();
-  }, [onClose, stopScanner]);
+  }, [stopScanner, onClose]);
 
   useEffect(() => {
     let mounted = true;
 
     const startBarcodeScanner = async () => {
-      if (!isOpen || scannerRef.current) return;
+      if (!isOpen || scannerRef.current || initializingRef.current) return;
 
-      await new Promise((resolve) => setTimeout(resolve, 200));
+      initializingRef.current = true;
 
-      if (!mounted || !isOpen) return;
+      if (!mounted || !isOpen) {
+        initializingRef.current = false;
+        return;
+      }
 
       try {
         const scanner = new Html5Qrcode("barcode-reader");
@@ -109,11 +112,12 @@ export const CameraScanner = ({
         );
 
         if (mounted) {
-          setIsScanning(true);
+          initializingRef.current = false;
         }
       } catch (error) {
         console.error("Barcode scanner error:", error);
         toast.error("Could not access camera. Please allow camera permission.");
+        initializingRef.current = false;
         if (mounted) {
           handleClose();
         }
@@ -126,9 +130,10 @@ export const CameraScanner = ({
 
     return () => {
       mounted = false;
+      initializingRef.current = false;
       stopScanner();
     };
-  }, [isOpen, isLoading, handleClose, onItemScanned, stopScanner]);
+  }, [isOpen, onItemScanned, handleClose, stopScanner, isLoading]);
 
   if (!isOpen) return null;
 

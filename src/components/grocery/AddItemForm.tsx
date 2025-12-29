@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Plus, Camera, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -75,16 +75,18 @@ export const AddItemForm = ({ onAdd }: AddItemFormProps) => {
     setIsScannerOpen(true);
   };
 
-  const handleItemScanned = (item: {
-    name: string;
-    price: number;
-    quantity: number;
-    category?: string;
-  }) => {
-    success();
-    onAdd(item.name, item.quantity, item.price, item.category);
-    toast.success(`Scanned: ${item.name}`);
-  };
+  const handleItemScanned = useCallback(
+    (item: { name: string; price: number; quantity: number; category?: string }) => {
+      success();
+      onAdd(item.name, item.quantity, item.price, item.category);
+      toast.success(`Scanned: ${item.name}`);
+    },
+    [onAdd, success]
+  );
+
+  const handleCloseScanner = useCallback(() => {
+    setIsScannerOpen(false);
+  }, []);
 
   if (!isOpen) {
     return (
@@ -110,7 +112,7 @@ export const AddItemForm = ({ onAdd }: AddItemFormProps) => {
         </div>
         <CameraScanner
           isOpen={isScannerOpen}
-          onClose={() => setIsScannerOpen(false)}
+          onClose={handleCloseScanner}
           onItemScanned={handleItemScanned}
         />
       </>
@@ -127,29 +129,13 @@ export const AddItemForm = ({ onAdd }: AddItemFormProps) => {
         <button
           type="button"
           onClick={handleCloseForm}
-          className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center"
+          className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center transition-all hover:bg-secondary/80 active:scale-95"
         >
           <X className="w-4 h-4 text-muted-foreground" />
         </button>
       </div>
 
-      <Input
-        placeholder="Item name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        className="h-12 rounded-xl bg-secondary border-0 text-base"
-        autoFocus
-      />
-
-      <div className="grid grid-cols-2 gap-3">
-        <Input
-          type="number"
-          placeholder="Qty"
-          value={quantity}
-          onChange={(e) => setQuantity(e.target.value)}
-          min="1"
-          className="h-12 rounded-xl bg-secondary border-0 text-base"
-        />
+      <div className="grid grid-cols-2 gap-3 transition-all">
         <Input
           type="number"
           placeholder="Price"
@@ -157,15 +143,31 @@ export const AddItemForm = ({ onAdd }: AddItemFormProps) => {
           onChange={handlePriceChange}
           step="0.01"
           min="0"
-          className="h-12 rounded-xl bg-secondary border-0 text-base"
+          className="h-12 rounded-xl bg-secondary border-0 text-base focus:glow-primary"
+          autoFocus
+        />
+        <Input
+          type="number"
+          placeholder="Qty"
+          value={quantity}
+          onChange={(e) => setQuantity(e.target.value)}
+          min="1"
+          className="h-12 rounded-xl bg-secondary border-0 text-base focus:glow-primary"
         />
       </div>
 
       <Input
+        placeholder="Item name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        className="h-12 rounded-xl bg-secondary border-0 text-base focus:glow-primary"
+      />
+      
+      <Input
         placeholder="Category (optional)"
         value={category}
         onChange={(e) => setCategory(e.target.value)}
-        className="h-12 rounded-xl bg-secondary border-0 text-base"
+        className="h-12 rounded-xl bg-secondary border-0 text-base focus:glow-primary"
       />
 
       <div className="flex gap-3 pt-2">

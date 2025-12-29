@@ -21,6 +21,7 @@ interface GroceryItemCardProps {
   }) => void;
   isFavorite?: boolean;
   index: number;
+  isLast?: boolean;
 }
 
 export const GroceryItemCard = ({
@@ -33,6 +34,7 @@ export const GroceryItemCard = ({
   onAddToFavorites,
   isFavorite,
   index,
+  isLast,
 }: GroceryItemCardProps) => {
   const [isEditingPrice, setIsEditingPrice] = useState(false);
   const [isEditingName, setIsEditingName] = useState(false);
@@ -148,8 +150,11 @@ export const GroceryItemCard = ({
     >
       <div
         className={cn(
-          "ios-card p-4 transition-all duration-200 relative",
-          item.checked && "opacity-50"
+          "p-4 transition-all duration-200 relative bg-card",
+          {
+            "opacity-50": item.checked,
+            "border-b": !isLast,
+          }
         )}
         style={{ animationDelay: `${index * 40}ms` }}
         onMouseDown={handleLongPressStart}

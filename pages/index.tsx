@@ -159,7 +159,7 @@ const Index = () => {
               </p>
             </div>
           ) : (
-            <div className="space-y-2">
+            <div className="bg-card rounded-[1.25rem] border overflow-hidden shadow-ios">
               {items.map((item, index) => (
                 <GroceryItemCard
                   key={item.id}
@@ -176,6 +176,7 @@ const Index = () => {
                   isFavorite={favorites.some(
                     (f) => f.name.toLowerCase() === item.name.toLowerCase()
                   )}
+                  isLast={index === items.length - 1}
                 />
               ))}
             </div>
