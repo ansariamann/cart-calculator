@@ -81,34 +81,10 @@ const Index = () => {
     }
   };
 
-  // Auto-save receipt when items change and there are items
-  useEffect(() => {
-    const saveTimeout = setTimeout(() => {
-      if (items.length > 0 && billCalculation.total > 0) {
-        // Check if this transaction is different from the last one
-        const lastTransaction = transactions[0];
-        const currentItemIds = items
-          .map((i) => i.id)
-          .sort()
-          .join(",");
-        const lastItemIds =
-          lastTransaction?.items
-            .map((i) => i.id)
-            .sort()
-            .join(",") || "";
-
-        if (currentItemIds !== lastItemIds) {
-          addTransaction(items, billCalculation);
-        }
-      }
-    }, 2000); // Debounce for 2 seconds
-
-    return () => clearTimeout(saveTimeout);
-  }, [items, billCalculation, transactions, addTransaction]);
-
   const handleNewTransaction = () => {
     if (items.length > 0) {
-      handleSaveTransaction();
+      addTransaction(items, billCalculation);
+      toast.success("Transaction saved to history");
     }
     clearAll();
   };

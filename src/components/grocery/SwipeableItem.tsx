@@ -116,6 +116,7 @@ export const SwipeableItem = ({ children, onDelete, className }: SwipeableItemPr
       ref={containerRef}
       className={cn(
         "relative overflow-hidden rounded-2xl",
+        "transition-colors duration-300 ease-in-out",
         isDeleting && "animate-fade-out",
         className
       )}
@@ -147,7 +148,8 @@ export const SwipeableItem = ({ children, onDelete, className }: SwipeableItemPr
       {/* Swipeable content */}
       <div
         className={cn(
-          "relative bg-card",
+          "relative bg-card rounded-2xl overflow-hidden",
+          "transition-colors duration-300 ease-in-out",
           !isDragging && "transition-transform duration-300 ease-out"
         )}
         style={{ transform: `translateX(${translateX}px)` }}

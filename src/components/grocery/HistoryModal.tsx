@@ -31,6 +31,12 @@ export const HistoryModal = ({
     ? bookmarkedTransactions 
     : transactions;
 
+  const handleClearHistory = () => {
+    onClearHistory();
+    // Reset filter to show all items after clearing
+    setShowBookmarked(false);
+  };
+
   return (
     <div 
       className={cn(
@@ -60,14 +66,15 @@ export const HistoryModal = ({
           <div className="w-10" />
         </div>
         
-        {/* Bookmark filter toggle - always show if there are any bookmarked items */}
-        {bookmarkedTransactions.length > 0 && (
+        {/* Bookmark filter toggle - always show if there are any transactions */}
+        {transactions.length > 0 && (
           <div className="px-4 pb-3">
             <Button
               variant={showBookmarked ? "default" : "outline"}
               size="sm"
               onClick={() => setShowBookmarked(!showBookmarked)}
               className="text-xs"
+              disabled={bookmarkedTransactions.length === 0}
             >
               <Bookmark className={cn("w-3.5 h-3.5 mr-1", showBookmarked && "fill-current")} />
               Saved ({bookmarkedTransactions.length})
@@ -184,7 +191,7 @@ export const HistoryModal = ({
           <div className="max-w-md mx-auto">
             <Button
               variant="destructive"
-              onClick={onClearHistory}
+              onClick={handleClearHistory}
               className="w-full"
             >
               <Trash2 className="w-4 h-4 mr-2" />

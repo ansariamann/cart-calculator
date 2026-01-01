@@ -56,7 +56,6 @@ export const ActionBar = ({
   const handleNewTransaction = () => {
     success();
     onNewTransaction();
-    toast.success("Started new list");
   };
 
   return (

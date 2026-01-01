@@ -35,6 +35,7 @@ export const useTransactionHistory = () => {
       date: new Date().toISOString(),
       items: [...items],
       calculation: { ...calculation },
+      bookmarked: false,
     };
     setTransactions(prev => [newTransaction, ...prev].slice(0, 50)); // Keep last 50
   }, []);
@@ -50,7 +51,7 @@ export const useTransactionHistory = () => {
   }, []);
 
   const clearHistory = useCallback(() => {
-    setTransactions([]);
+    setTransactions(prev => prev.filter(t => t.bookmarked === true));
   }, []);
 
   return {

@@ -2,7 +2,7 @@ import { useRef, useEffect, useState, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { X, Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { Html5Qrcode } from "html5-qrcode";
+
 
 interface ScannedItem {
   name: string;
@@ -22,7 +22,7 @@ export const CameraScanner = ({
   onClose,
   onItemScanned,
 }: CameraScannerProps) => {
-  const scannerRef = useRef<Html5Qrcode | null>(null);
+  const scannerRef = useRef<any>(null);
   const initializingRef = useRef(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -57,6 +57,7 @@ export const CameraScanner = ({
       }
 
       try {
+        const { Html5Qrcode } = await import("html5-qrcode");
         const scanner = new Html5Qrcode("barcode-reader");
         scannerRef.current = scanner;
 
